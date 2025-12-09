@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDocumentMarkdown } from "@/lib/docs";
+import {getDocumentMarkdown} from "@/lib/md";
 
 type Params = {
 	params: Promise<{ id: string }>;

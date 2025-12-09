@@ -38,6 +38,26 @@ export default function HomePage() {
 		}
 	};
 
+	const renderers = {
+		//This custom renderer changes how images are rendered
+		//we use it to constrain the max width of an image to its container
+		image: ({
+					alt,
+					src,
+					title,
+				}: {
+			alt?: string;
+			src?: string;
+			title?: string;
+		}) => (
+			<img
+				alt={alt}
+				src={src}
+				title={title}
+				style={{ maxWidth: 475 }}  />
+		),
+	};
+
 	return (
 		<main style={{maxWidth: 800, margin: "40px auto", padding: 16}}>
 			<h1>Google Docs to Open Alliance</h1>
@@ -82,14 +102,27 @@ export default function HomePage() {
 			{result && (
 				<section>
 					<h2>{result.title}</h2>
-					<pre
-						style={{
-							whiteSpace: "pre-wrap",
-							padding: 12,
-							borderRadius: 4,
+					<Markdown
+						rehypePlugins={[rehypeRaw]}
+						components={{
+							img: (props) =>
+							{
+								const size = props.alt?.match(/image\|(\d+)x(\d+)/)  // Regex to look for sizing pattern
+								const width = size ? size[1] : "400"
+								const height = size ? size[2] : "250"
+
+								return (
+									<img
+										alt={props.alt}
+										src={props.src}
+										title={props.title}
+										width={width}
+										height={height}/>
+								);
+							}
 						}}>
-						<Markdown rehypePlugins={[rehypeRaw]}>{result.text}</Markdown>
-					</pre>
+						{result.text}
+					</Markdown>
 					<button onClick={() => navigator.clipboard.writeText(result?.text)}>Copy</button>
 				</section>
 			)}
