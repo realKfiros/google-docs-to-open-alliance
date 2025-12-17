@@ -1,112 +1,18 @@
 "use client";
 
 import {FormEvent, useEffect, useMemo, useState} from "react";
-import Markdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import styled from "styled-components";
 import {getGoogleDocsId} from "@/lib/validations/google-docs";
-import {Button} from "@/lib/components/Button";
+import {Button} from "@/lib/styles/Button";
+import {Page} from "@/lib/styles/Page";
+import {Form} from "@/lib/styles/Form";
+import {Instruction} from "@/lib/styles/Instruction";
+import {ErrorMessage} from "@/lib/styles/ErrorMessage";
+import {Post} from "@/lib/styles/Post";
+import {MD} from "@/lib/components/MD";
 
 const documentGuidelinesLink = "https://ninjas4744.blossom-kc.com/Launcher?assignment=274&anonymous=1";
 
-const PageContainer = styled.div`
-	max-width: calc(100vw - 20px);
-	min-width: 0;
-	margin: 40px auto;
-	padding: 16px;
-	position: relative;
-	
-	> .page-title {
-		margin: 0 0 20px 0;
-	}
-	
-	> .page-description {
-		margin: 0 0 12px 0;
-	}
-	
-	> .instruction {
-		margin: 0 0 24px 0;
-		
-		a {
-			color: #0070f3;
-			text-decoration: underline;
-		}
-	}
-	
-	> .document-form {
-		margin-bottom: 24px;
-		
-		> .field {
-			display: flex;
-			margin: 10px;
-			align-items: center;
-
-			> label {
-				display: block;
-				margin-bottom: 8px;
-				min-width: 150px;
-			}
-
-			> input {
-				margin-bottom: 8px;
-				border-radius: 4px;
-				border: 1px solid #ccc;
-				
-				&[type="text"] {
-					width: 100%;
-					padding: 8px;
-				}
-			}
-		}
-	}
-	
-	> .error-message {
-		color: #ff0000;
-		margin-bottom: 16px;
-	}
-
-	> .post {
-		position: relative;
-		overflow: auto;
-		display: flex;
-
-		> .topic-avatar {
-			align-self: flex-start;
-			position: sticky;
-			top: 0;
-			flex-shrink: 0;
-			margin-right: 12px;
-			margin-bottom: 25px;
-			width: 50px;
-			height: 50px;
-			background-color: dodgerblue;
-			border-radius: 50%;
-			overflow-anchor: none;
-		}
-
-		> .topic {
-			flex: 1 1 0;
-			max-width: calc(690px + 0.75rem * 2);
-			min-width: 0;
-			position: relative;
-			border-top: 1px solid rgb(48.62, 48.62, 48.62);
-			padding: 0 0.75rem 0.25rem 0.75rem;
-
-			> * {
-				padding-block-start: 1rem;
-			}
-
-			> .topic-creator {
-				font-weight: bold;
-			}
-
-			> .topic-body {
-				line-height: 1.5;
-			}
-		}
-	}
-`;
-export default function Page() {
+export default function () {
 	const [titleColorsInput, setTitleColorsInput] = useState("#ff0000");
 	const [docInput, setDocInput] = useState("");
 	const docId = useMemo(() => getGoogleDocsId(docInput), [docInput]);
@@ -152,12 +58,12 @@ export default function Page() {
 	};
 
 	return (
-		<PageContainer>
+		<Page>
 			<h1 className="page-title">Google Docs to Open Alliance Converter</h1>
 			<p className="page-description">Write open alliance posts and updates on google docs and convert them to Chief Delphi's markdown</p>
-			<p className="instruction">To get the best results, use these <a href={documentGuidelinesLink} target="_blank">document formatting guidelines</a></p>
+			<Instruction>To get the best results, use these <a href={documentGuidelinesLink} target="_blank">document formatting guidelines</a></Instruction>
 
-			<form
+			<Form
 				onSubmit={handleSubmit}
 				className="document-form">
 
@@ -180,52 +86,34 @@ export default function Page() {
 						id="doc-url-input" />
 				</div>
 
-				{docId && <Button
-					type="submit"
-					disabled={loading || !docInput}>
-					{loading ? "Loading..." : "Read Document"}
-				</Button>}
-			</form>
+				{docId && (
+					<Button
+						type="submit"
+						disabled={loading || !docInput}>
+						{loading ? "Loading..." : "Read Document"}
+					</Button>
+				)}
+			</Form>
 
 			{error && (
-				<div className="error-message">Error: {error}</div>
+				<ErrorMessage>Error: {error}</ErrorMessage>
 			)}
 
 			{result && (
-				<div className="post">
+				<Post>
 					<div className="topic-avatar" />
 					<div className="topic">
 						<div className="topic-creator">User</div>
 						<div className="topic-body">
-							<Markdown
-								rehypePlugins={[rehypeRaw]}
-								components={{
-									img: (props) =>
-									{
-										const size = props.alt?.match(/image\|(\d+)x(\d+)/)  // Regex to look for sizing pattern
-										const width = size ? size[1] : "400"
-										const height = size ? size[2] : "250"
-
-										return (
-											<img
-												alt={props.alt}
-												src={props.src}
-												title={props.title}
-												width={width}
-												height={height}/>
-										);
-									}
-								}}>
-								{result.text}
-							</Markdown>
+							<MD text={result.text} />
 							<Button
 								onClick={() => navigator.clipboard.writeText(result?.text)}>
 								Copy
 							</Button>
 						</div>
 					</div>
-				</div>
+				</Post>
 			)}
-		</PageContainer>
+		</Page>
 	);
 }
