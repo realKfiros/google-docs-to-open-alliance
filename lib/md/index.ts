@@ -12,9 +12,12 @@ export async function getDocumentMarkdown(documentId: string, color: string = '#
 	const body = document.body?.content ?? [];
 	const inlineObjects = (document.inlineObjects ?? {}) as Record<string, any>;
 
+	let isCodeBlock = false;
 	const text = body.map((structuralElement) => {
 		const paragraph = structuralElement.paragraph;
-		if (!paragraph) return "\n";
+		if (!paragraph) {
+			return "\n";
+		}
 
 		const elements = paragraph.elements ?? [];
 
@@ -73,6 +76,14 @@ export async function getDocumentMarkdown(documentId: string, color: string = '#
 			return text;
 		}).join("");
 
+		if (paragraphText.startsWith('```')) {
+			isCodeBlock = !isCodeBlock;
+		}
+
+		if (isCodeBlock) {
+			return paragraphText;
+		}
+
 		if (paragraphType === "HEADING") {
 			const level = parseInt(paragraphTypeNum);
 			paragraphText = `${"#".repeat(level)} ${coloredTitleText(paragraphText, color)}`;
@@ -82,8 +93,8 @@ export async function getDocumentMarkdown(documentId: string, color: string = '#
 			paragraphText = "* " + paragraphText;
 		}
 
-		return paragraphText;
-	}).join("\n");
+		return paragraphText + "\n";
+	}).join("");
 
 	return {
 		title: document.title ?? "",
