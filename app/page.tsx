@@ -1,9 +1,10 @@
 "use client";
 
-import {FormEvent, useState} from "react";
+import {FormEvent, useMemo, useState} from "react";
 import Markdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import styled from "styled-components";
+import {getGoogleDocsId} from "@/lib/validations/google-docs";
 
 const PageContainer = styled.div`
 	max-width: calc(100vw - 20px);
@@ -21,7 +22,7 @@ const PageContainer = styled.div`
 			align-self: flex-start;
 			position: sticky;
 			top: 0;
-			flex-shrink: 0;         /* שלא יתכווץ כשצרים */
+			flex-shrink: 0;
 			margin-right: 12px;
 			margin-bottom: 25px;
 			width: 50px;
@@ -32,7 +33,6 @@ const PageContainer = styled.div`
 		}
 
 		> .topic {
-			/* בלי float בכלל */
 			flex: 1 1 0;
 			max-width: calc(690px + 0.75rem * 2);
 			min-width: 0;
@@ -55,7 +55,8 @@ const PageContainer = styled.div`
 	}
 `;
 export default function Page() {
-	const [docId, setDocId] = useState("");
+	const [docInput, setDocInput] = useState("");
+	const docId = useMemo(() => getGoogleDocsId(docInput), [docInput]);
 	const [loading, setLoading] = useState(false);
 	const [result, setResult] = useState<{ title: string; text: string } | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -96,8 +97,8 @@ export default function Page() {
 				</label>
 				<input
 					type="text"
-					value={docId}
-					onChange={(e) => setDocId(e.target.value)}
+					value={docInput}
+					onChange={(e) => setDocInput(e.target.value)}
 					style={{
 						width: "100%",
 						padding: 8,
@@ -105,11 +106,11 @@ export default function Page() {
 						borderRadius: 4,
 						border: "1px solid #ccc",
 					}}
-					placeholder="1A2b3C... from the document URL"
+					placeholder="Document URL or ID"
 				/>
-				<button
+				{docId && <button
 					type="submit"
-					disabled={loading || !docId}
+					disabled={loading || !docInput}
 					style={{
 						padding: "8px 16px",
 						borderRadius: 4,
@@ -120,7 +121,7 @@ export default function Page() {
 					}}
 				>
 					{loading ? "Loading..." : "Read Document"}
-				</button>
+				</button>}
 			</form>
 
 			{error && (

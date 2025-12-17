@@ -1,6 +1,6 @@
-import {getYouTubeVideoId} from "@/lib/links";
 import {getGoogleDocs} from "@/lib/docs";
 import {center, coloredTitleText, embed, wrapText} from "@/lib/md/text_nodes";
+import {getYouTubeId} from "@/lib/validations/youtube";
 
 const APP_BASE_URL = process.env.APP_BASE_URL || "http://localhost:3000";
 
@@ -55,7 +55,7 @@ export async function getDocumentMarkdown(documentId: string, color: string = '#
 			let text = el.textRun?.content ?? "";
 			if (paragraphType === 'NORMAL' && text.trim())
 			{
-				const youtubeVideoId = getYouTubeVideoId(text.trim());
+				const youtubeVideoId = getYouTubeId(text.trim());
 				if (youtubeVideoId) {
 					if (exportOutput)
 						text = center(`https://www.youtube.com/watch?v=${youtubeVideoId}`);

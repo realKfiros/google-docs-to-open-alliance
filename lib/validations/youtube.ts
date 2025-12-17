@@ -1,4 +1,4 @@
-export const getYouTubeVideoId = (url: string) => {
+export const getYouTubeId = (url: string): string | null => {
 	try {
 		const parsed = new URL(url);
 
@@ -18,7 +18,6 @@ export const getYouTubeVideoId = (url: string) => {
 			return parsed.pathname.replace("/shorts/", "");
 		}
 
-		// 4) youtube.com/embed/VIDEO_ID
 		if (parsed.pathname.startsWith("/embed/")) {
 			return parsed.pathname.replace("/embed/", "");
 		}
