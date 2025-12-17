@@ -2,7 +2,7 @@ import {getGoogleDocs} from "@/lib/docs";
 import {center, coloredTitleText, embed, wrapText} from "@/lib/md/text_nodes";
 import {getYouTubeId} from "@/lib/validations/youtube";
 
-const APP_BASE_URL = process.env.APP_BASE_URL || "http://localhost:3000";
+const APP_BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export async function getDocumentMarkdown(documentId: string, color: string = '#2163af', exportOutput: boolean = false): Promise<{ title: string, text: string }> {
 	try {
