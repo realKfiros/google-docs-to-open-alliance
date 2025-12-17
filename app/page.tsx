@@ -8,7 +8,9 @@ import {Form} from "@/lib/styles/Form";
 import {Instruction} from "@/lib/styles/Instruction";
 import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
+import {A} from "@/lib/styles/A";
 
+const rembrandtsStylingPostLink = "https://chiefdelphi.com/t/frc-4481-team-rembrandts-2025-build-thread-open-alliance/472303/43";
 const documentGuidelinesLink = "https://ninjas4744.blossom-kc.com/Launcher?assignment=274&anonymous=1";
 
 export default function () {
@@ -21,6 +23,7 @@ export default function () {
 		const colorFromStorage = localStorage.getItem("titleColors");
 		if (colorFromStorage) {
 			setTitleColorsInput(colorFromStorage);
+			Cookies.set('titleColors', colorFromStorage);
 		}
 	}, []);
 
@@ -36,9 +39,11 @@ export default function () {
 
 	return (
 		<Page>
-			<h1 className="page-title">Google Docs to Open Alliance Converter</h1>
-			<p className="page-description">Write open alliance posts and updates on google docs and convert them to Chief Delphi's markdown</p>
-			<Instruction>To get the best results, use these <a href={documentGuidelinesLink} target="_blank">document formatting guidelines</a></Instruction>
+			<h1 className="page-title">Google Docs to Chief Delphi Converter</h1>
+			<p className="page-description">Write your posts and updates on google docs and convert them to Chief Delphi's markdown</p>
+			<p className="page-description">This converter is using Team Rembrandts 4481's style for Open Alliance posts. <A href={rembrandtsStylingPostLink} target="_blank">Check it out on CD</A>.</p>
+			<Instruction>To get the best results, use these <A href={documentGuidelinesLink}>document formatting guidelines</A></Instruction>
+
 
 			<Form onSubmit={handleSubmit} className="document-form">
 				<div className="field">

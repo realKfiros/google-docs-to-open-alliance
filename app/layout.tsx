@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type {Metadata} from "next";
 import {StyledComponentsRegistry} from "@/lib/registry";
 import {ClientLayout} from "@/lib/client-layout";
 
 export const metadata: Metadata = {
-  title: "Google Docs to Open Alliance",
-  description: "Convert your Google Docs document to Open Alliance styled markdown",
+  title: "Google Docs to Chief Delphi",
+  description: "Convert your Google Docs document to a Chief Delphi post.",
 };
 
 export default function RootLayout({
